@@ -1,22 +1,34 @@
 #pragma once
 #include "Action.h"
 #include <cassert>
+#include <iostream>
 
 void Action::AddEffect(const std::string effect) {
-	auto effectIt = parWorld.WorldPreconditions.find(effect);
-	assert(effectIt == parWorld.WorldPreconditions.end());
-	if (effectIt != parWorld.WorldPreconditions.end()) {
+	std::cout << "Add effect '" << effect << "' pour action : '" << myAction << "' " << std::endl;
+	const auto effectIt = std::find(listEffect.begin(), listEffect.end(), effect);
+	assert(effectIt == listEffect.end());
+	if (effectIt != listEffect.end()) {
 		return;
 	}
-	parWorld.WorldPreconditions.insert(std::make_pair(effect, this));
+	listEffect.push_back(effect);
 }
 
 
-void Action::AddPrecondition(const std::string precondition) {
-	auto preconditionIt = parWorld.WorldPreconditions.find(precondition);
-	assert(preconditionIt == parWorld.WorldPreconditions.end());
+void Action::AddPrecondition(const std::string precondition,const bool isActiv) {
+	std::cout << "Add precondition '" << precondition << "' pour action : '" << myAction << "' " << std::endl;
+	
+
+	const auto effectIt = std::find(listPrecondition.begin(), listPrecondition.end(), precondition);
+	assert(effectIt == listPrecondition.end());
+	if (effectIt != listPrecondition.end()) {
+		return;
+	}
+	listPrecondition.push_back(precondition);
+
+	const auto preconditionIt = parWorld.WorldPreconditions.find(precondition);
 	if (preconditionIt != parWorld.WorldPreconditions.end()) {
 		return;
 	}
-	parWorld.WorldPreconditions.insert(std::make_pair(precondition,this));
+
+	parWorld.WorldPreconditions.insert(std::make_pair(precondition, isActiv));
 }
