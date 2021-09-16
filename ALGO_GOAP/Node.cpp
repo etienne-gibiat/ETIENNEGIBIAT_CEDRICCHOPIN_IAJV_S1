@@ -8,22 +8,22 @@ Node::Node(Node* parent, std::unordered_map<std::string, bool> state, int cost, 
 	nodeAction = action;
 }
 
-std::unordered_map<std::string, bool> Node::getState() {
+std::unordered_map<std::string, bool> Node::getState() const{
 
 	return curentState;
 
 }
 
-Action* Node::getAction() {
+Action* Node::getAction() const {
 
 	return nodeAction;
 
 }
 
-int Node::getCost() {
+int Node::getCost() const {
 	return curentCost;
 }
 
-Node* Node::getParrent() {
+Node* Node::getParrent() const {
 	return nodeParent;
 }

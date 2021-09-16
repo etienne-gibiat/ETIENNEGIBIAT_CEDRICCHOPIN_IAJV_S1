@@ -13,7 +13,8 @@ int main()
 	GoapPlanner sm(world);
 
 	sm.Init();
-
+	
+	sm.LetsGo();
 
 	sm.DeInit();
 

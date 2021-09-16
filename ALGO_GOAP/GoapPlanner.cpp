@@ -65,7 +65,20 @@ void GoapPlanner::Init() {
 
 	
 
-	std::vector<Action*> plan = initPlan(attack_player);
+	
+
+
+}
+
+void GoapPlanner::LetsGo()
+{
+	Action* goal = AllActions.front();
+	for (Action* g : AllActions) {
+		if (g->getMyAction() == "AttackPlayer") {
+			goal = g;
+		}
+	}
+	std::vector<Action*> plan = initPlan(goal);
 
 	std::cout << std::endl;
 
@@ -73,7 +86,7 @@ void GoapPlanner::Init() {
 
 	std::cout << std::endl;
 
-	std::cout << "precondition : "  << std::endl;
+	std::cout << "precondition : " << std::endl;
 
 	for (std::string temp : plan.back()->getListPrecondition()) {
 
@@ -101,13 +114,13 @@ void GoapPlanner::Init() {
 
 	for (std::pair<std::string, int> element : world.WorldPreconditions)
 	{
-		
-			std::cout << "- " << element.first << " : " << element.second << std::endl;
+
+		std::cout << "- " << element.first << " : " << element.second << std::endl;
 	}
 
 	std::cout << std::endl;
 
-	std::cout << "actions list to reach the goal : "  << std::endl;
+	std::cout << "actions list to reach the goal : " << std::endl;
 
 	int count = 1;
 	int totalCost = 0;
@@ -123,11 +136,9 @@ void GoapPlanner::Init() {
 
 	}
 	std::cout << "- total cost : " << totalCost << std::endl;
-
-
 }
 
-bool GoapPlanner::randBool() {
+bool GoapPlanner::randBool() const {
 
 	std::mt19937 rng(std::random_device{}());
 	return std::uniform_int_distribution<>{ 0, 1 }(rng);
@@ -149,8 +160,8 @@ void GoapPlanner::DeInit()
 
 std::vector<Action*> GoapPlanner::initPlan(Action* goal) {
 
-	std::vector<Node*> leaves;
-	std::vector<Action*> result;
+	std::vector<Node*> leaves; //Feuilles
+	std::vector<Action*> result; // Résultat final dans l'ordre
 
 
 	Node* goalNode = new Node(nullptr, world.WorldPreconditions, 0, nullptr);
@@ -160,10 +171,12 @@ std::vector<Action*> GoapPlanner::initPlan(Action* goal) {
 		return result;
 	}
 	else {
+		// Si il n'y a pas de résultats ( toutes les conditions sont déjà remplies), on effectue l'action goal
 		if(result.size() == 0)
 			result.push_back(goal);
 	}
 
+	// Node le moins cher en cout
 	Node* cheapest = nullptr;
 	for(Node* leaf : leaves) {
 		if (cheapest == nullptr)
@@ -173,7 +186,7 @@ std::vector<Action*> GoapPlanner::initPlan(Action* goal) {
 				cheapest = leaf;
 		}
 	}
-
+	//On ajoute dans le resultat final les nodes en partant de la fin afin d'avoir les actions dans l'ordre
 	Node* node = cheapest;
 	while (node != nullptr) {
 		if (node->getAction() != nullptr) {
@@ -189,7 +202,7 @@ std::vector<Action*> GoapPlanner::initPlan(Action* goal) {
 
 }
 
-bool GoapPlanner::checkPrecondition(std::vector<std::string> actionPrecondition, std::unordered_map<std::string, bool> parentState) {
+bool GoapPlanner::checkPrecondition(const std::vector<std::string> actionPrecondition,const std::unordered_map<std::string, bool> parentState) const{
 
 	bool ok = true;
 
@@ -209,7 +222,7 @@ bool GoapPlanner::checkPrecondition(std::vector<std::string> actionPrecondition,
 
 }
 
-std::unordered_map<std::string, bool> GoapPlanner::applyEffect(std::unordered_map<std::string, bool> parentState, std::vector<std::string> actionEffects) {
+std::unordered_map<std::string, bool> GoapPlanner::applyEffect(const std::unordered_map<std::string, bool> parentState, const std::vector<std::string> actionEffects)const {
 	
 	std::unordered_map<std::string, bool> newState = parentState;
 		
@@ -230,7 +243,7 @@ std::unordered_map<std::string, bool> GoapPlanner::applyEffect(std::unordered_ma
 	
 }
 
-std::vector<Action*> GoapPlanner::removeAction(std::vector<Action*> curentActionAvailble, Action* action) {
+std::vector<Action*> GoapPlanner::removeAction(const std::vector<Action*> curentActionAvailble, const Action* action)const {
 
 	std::vector<Action*> newActionAvailble;
 
@@ -247,7 +260,7 @@ std::vector<Action*> GoapPlanner::removeAction(std::vector<Action*> curentAction
 	return newActionAvailble;
 }
 
-bool GoapPlanner::checkPreconditionGoal(Action* goal, std::unordered_map<std::string, bool> curentState) {
+bool GoapPlanner::checkPreconditionGoal(const Action* goal, const std::unordered_map<std::string, bool> curentState)const {
 
 	bool ok = true;
 
@@ -268,7 +281,7 @@ bool GoapPlanner::checkPreconditionGoal(Action* goal, std::unordered_map<std::st
 }
 
 
-bool GoapPlanner::buildTree(Node* node, std::vector<Node*>& leaves, Action* goal, std::vector<Action*> curentActionAvailble) {
+bool GoapPlanner::buildTree(Node* node, std::vector<Node*>& leaves, Action* goal, const std::vector<Action*> curentActionAvailble) {
 
 	bool foundOne = false;
 
@@ -277,17 +290,18 @@ bool GoapPlanner::buildTree(Node* node, std::vector<Node*>& leaves, Action* goal
 		for (Action* temp : curentActionAvailble) {
 
 
-
+			//Pour chaque action, verification de si l'action peut être réalisée
 			if (checkPrecondition(temp->getListPrecondition(), node->getState())) {
 
-
+				//On applique les effets
 				std::unordered_map<std::string, bool> curentState = applyEffect(node->getState(), temp->getListEffect());
 
 				Node* childNode = new Node(node, curentState, node->getCost() + temp->getCost(), temp);
 
+				//Check si après l'action, le goal est possible a réaliser
 				if (checkPreconditionGoal(goal, curentState)) {
 
-
+					//Ajout dans les solutions possible
 					leaves.push_back(childNode);
 					foundOne = true;
 				}
