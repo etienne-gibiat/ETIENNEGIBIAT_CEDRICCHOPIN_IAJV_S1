@@ -32,3 +32,20 @@ void Action::AddPrecondition(const std::string precondition,const bool isActiv) 
 
 	parWorld.WorldPreconditions.insert(std::make_pair(precondition, isActiv));
 }
+
+std::vector<std::string> Action::getListEffect() const {
+	return listEffect;
+}
+
+std::string Action::getMyAction() const {
+	return myAction;
+}
+
+std::vector<std::string> Action::getListPrecondition() const {
+	return listPrecondition;
+}
+
+int Action::getCost() const{
+
+	return cost;
+}

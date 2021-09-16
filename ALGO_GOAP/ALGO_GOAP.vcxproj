@@ -141,12 +141,14 @@
   <ItemGroup>
     <ClCompile Include="Action.cpp" />
     <ClCompile Include="ALGO_GOAP.cpp" />
-    <ClCompile Include="StateMachine.cpp" />
+    <ClCompile Include="Node.cpp" />
+    <ClCompile Include="GoapPlanner.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Node.h" />
     <ClInclude Include="Ressource.h" />
     <ClInclude Include="Action.h" />
-    <ClInclude Include="StateMachine.h" />
+    <ClInclude Include="GoapPlanner.h" />
     <ClInclude Include="World.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

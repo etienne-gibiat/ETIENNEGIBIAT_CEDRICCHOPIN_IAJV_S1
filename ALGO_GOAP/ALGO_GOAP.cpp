@@ -1,11 +1,11 @@
 #include <iostream>
 #include "World.h"
 #include "Action.h"
-#include "StateMachine.h"
+#include "GoapPlanner.h"
 int main()
 {
 	World world;
-	StateMachine sm(world);
+	GoapPlanner sm(world);
 
 	sm.Init();
 
