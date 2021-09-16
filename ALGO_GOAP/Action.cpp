@@ -29,7 +29,7 @@ void Action::AddPrecondition(const std::string precondition,const bool isActiv) 
 	if (preconditionIt != parWorld.WorldPreconditions.end()) {
 		return;
 	}
-
+	std::cout << "Ajout de l'existence de la precondition " << precondition << " a la valeur " << isActiv << " dans le monde" << std::endl;
 	parWorld.WorldPreconditions.insert(std::make_pair(precondition, isActiv));
 }
 

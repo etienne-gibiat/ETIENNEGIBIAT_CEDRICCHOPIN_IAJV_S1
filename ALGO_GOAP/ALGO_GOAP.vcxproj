@@ -141,15 +141,18 @@
   <ItemGroup>
     <ClCompile Include="Action.cpp" />
     <ClCompile Include="ALGO_GOAP.cpp" />
+    <ClCompile Include="Espion.cpp" />
+    <ClCompile Include="Habitant.cpp" />
     <ClCompile Include="Node.cpp" />
     <ClCompile Include="GoapPlanner.cpp" />
+    <ClCompile Include="UtilityAI.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Node.h" />
-    <ClInclude Include="Ressource.h" />
-    <ClInclude Include="Action.h" />
-    <ClInclude Include="GoapPlanner.h" />
+    <ClInclude Include="Habitant.h" />
+    <ClInclude Include="UtilityAI.h" />
     <ClInclude Include="World.h" />
+    <ClInclude Include="GoapPlanner.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
