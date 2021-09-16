@@ -16,7 +16,7 @@ public:
 	std::unordered_map<std::string, bool> applyEffect(std::unordered_map<std::string, bool> parentState, std::vector<std::string> actionEffects);
 	std::vector<Action*> removeAction(std::vector<Action*> curentActionAvailble, Action* action);
 	bool checkPreconditionGoal(Action* goal, std::unordered_map<std::string, bool> curentState);
-
+	bool randBool();
 
 private:
 

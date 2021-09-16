@@ -1,30 +1,69 @@
 #include "GoapPlanner.h"
 #include "Action.h"
 #include "Node.h"
+#include <random>
 #include <iostream>
+#include <functional>
+
+
 void GoapPlanner::Init() {
 
 	Action* reload = new Action("Reload", world, 1);
+	Action* get_Ammo = new Action("GetAmmo", world, 2);
+	Action* drink_VPotion = new Action("DrinkVPotion", world, 1);
 	Action* attack_player = new Action("AttackPlayer", world, 1);
+	Action* drink_EPotion = new Action("DrinkEPotion", world, 1);
+	Action* get_EPotion = new Action("GetEPotion", world, 2);
+	Action* get_vPotion = new Action("GetVPotion", world, 2);
+	Action* sleep = new Action("sleep", world, 5);
 	Action* move_to_player = new Action("MoveToPlayer", world, 5);
 	Action* get_weapon = new Action("GetWeapon", world, 3);
-	AllActions.push_back(attack_player);
-	AllActions.push_back(reload);
-	AllActions.push_back(move_to_player);
-	AllActions.push_back(get_weapon);
+
 	
-	reload->AddPrecondition("Avoir une arme",true);
-	reload->AddEffect("Avoir des munitions");
+	AllActions.push_back(reload);
+	AllActions.push_back(get_Ammo);
+	AllActions.push_back(drink_VPotion);
+	AllActions.push_back(attack_player);
+	AllActions.push_back(drink_EPotion);
+	AllActions.push_back(get_EPotion);
+	AllActions.push_back(get_vPotion);
+	AllActions.push_back(sleep);
+	AllActions.push_back(get_weapon);
+	AllActions.push_back(move_to_player);
+
+	reload->AddPrecondition("Avoir une arme", randBool());
+	reload->AddPrecondition("Avoir des munitions", randBool());
+	reload->AddEffect("Avoir arme charge");
+
+	get_Ammo->AddEffect("Avoir des munitions");
+
+	drink_VPotion->AddPrecondition("avoir une potion de vie", randBool());
+	drink_VPotion->AddEffect("Avoir de la vie");
 
 	attack_player->AddEffect("Tue la cible");
-	attack_player->AddPrecondition("Avoir des munitions",true);
-	attack_player->AddPrecondition("Avoir une arme",false);
-	attack_player->AddPrecondition("Joueur a porter",false);
+	attack_player->AddPrecondition("Avoir arme charge", randBool());
+	attack_player->AddPrecondition("Avoir une arme", randBool());
+	attack_player->AddPrecondition("Joueur a porter", randBool());
+	attack_player->AddPrecondition("Avoir de l energie", randBool());
 
-	move_to_player->AddEffect("Joueur a porter");
+	drink_EPotion->AddPrecondition("avoir une potion d energie", randBool());
+	drink_EPotion->AddEffect("Avoir de l energie");
+
+	get_EPotion->AddEffect("avoir une potion d energie");
+
+	get_vPotion->AddEffect("avoir une potion de vie");
+
+	sleep->AddEffect("Avoir de la vie");
+	sleep->AddEffect("Avoir de l energie");
 
 	get_weapon->AddEffect("Avoir une arme");
-	get_weapon->AddEffect("Avoir des munitions");
+	get_weapon->AddEffect("Avoir arme charge");
+
+	move_to_player->AddPrecondition("Avoir de la vie", randBool());
+	move_to_player->AddPrecondition("Avoir de l energie", randBool());
+	move_to_player->AddEffect("Joueur a porter");
+
+	
 
 	std::vector<Action*> plan = initPlan(attack_player);
 
@@ -44,15 +83,26 @@ void GoapPlanner::Init() {
 
 	std::cout << std::endl;
 
-	std::cout << "world state precondition : " << std::endl;
+	std::cout << "goal state precondition : " << std::endl;
 
 	for (std::string temp : plan.back()->getListPrecondition()) {
 
 		auto search = world.WorldPreconditions.find(temp);
 		if (search != world.WorldPreconditions.end()) {
-			std::cout << "- " << temp  << " : " << search->second << std::endl;
+			std::cout << "- " << temp << " : " << search->second << std::endl;
 		}
 
+	}
+
+	std::cout << std::endl;
+
+
+	std::cout << "world state precondition : " << std::endl;
+
+	for (std::pair<std::string, int> element : world.WorldPreconditions)
+	{
+		
+			std::cout << "- " << element.first << " : " << element.second << std::endl;
 	}
 
 	std::cout << std::endl;
@@ -77,6 +127,13 @@ void GoapPlanner::Init() {
 
 }
 
+bool GoapPlanner::randBool() {
+
+	std::mt19937 rng(std::random_device{}());
+	return std::uniform_int_distribution<>{ 0, 1 }(rng);
+
+}
+
 void GoapPlanner::DeInit()
 {
 	for (Action* action : AllActions)
@@ -90,38 +147,6 @@ void GoapPlanner::DeInit()
 
 }
 
-//void GoapPlanner::MakeActionTree() {
-//
-//	bool ok = false;
-//
-//	Action* actionTemp = AllActions.front();
-//
-//	Node* treeRoot = new Node(true, actionTemp->getMyAction());
-//	Node* tempRoot = treeRoot;
-//
-//	buildGraph(treeRoot);
-//
-//	showTree(treeRoot, 0);
-//	
-//}
-
-//void GoapPlanner::showTree(Node* treeRoot, int index) {
-//
-//	index++;
-//	std::cout << "index : " << index << " node : " << treeRoot->getName() << " action : " << treeRoot->getIsAction() <<std::endl;
-//
-//	if (treeRoot->getChilds().size() > 0) {
-//
-//		for (Node* temp : treeRoot->getChilds()) {
-//
-//			showTree(temp, index);
-//
-//		}
-//
-//	}
-//
-//}
-
 std::vector<Action*> GoapPlanner::initPlan(Action* goal) {
 
 	std::vector<Node*> leaves;
@@ -134,6 +159,10 @@ std::vector<Action*> GoapPlanner::initPlan(Action* goal) {
 	if (!found) {
 		return result;
 	}
+	else {
+		if(result.size() == 0)
+			result.push_back(goal);
+	}
 
 	Node* cheapest = nullptr;
 	for(Node* leaf : leaves) {
@@ -145,16 +174,16 @@ std::vector<Action*> GoapPlanner::initPlan(Action* goal) {
 		}
 	}
 
-	// get its node and work back through the parents
 	Node* node = cheapest;
 	while (node != nullptr) {
 		if (node->getAction() != nullptr) {
-			result.insert(result.begin(), node->getAction()); // insert the action in the front
+			result.insert(result.begin(), node->getAction());
 		}
 		node = node->getParrent();
 	}
 
-	result.push_back(goal);
+	if(result.back()->getMyAction() != goal->getMyAction())
+		result.push_back(goal);
 
 	return result;
 
@@ -190,7 +219,7 @@ std::unordered_map<std::string, bool> GoapPlanner::applyEffect(std::unordered_ma
 			auto search = newState.find(temp);
 			if (search != newState.end()) {
 
-				newState.insert_or_assign(search->first, !search->second);
+				newState.insert_or_assign(search->first, true);
 
 			}
 
@@ -243,186 +272,43 @@ bool GoapPlanner::buildTree(Node* node, std::vector<Node*>& leaves, Action* goal
 
 	bool foundOne = false;
 
-	for (Action* temp : curentActionAvailble) {
+	if (!checkPreconditionGoal(goal, world.WorldPreconditions)) {
 
-		// if the parent state has the conditions for this action's preconditions, we can use it here
+		for (Action* temp : curentActionAvailble) {
 
-		if (checkPrecondition(temp->getListPrecondition(), node->getState())) {
 
-			// apply the action's effects to the parent state
 
-			std::unordered_map<std::string, bool> curentState = applyEffect(node->getState(), temp->getListEffect());
+			if (checkPrecondition(temp->getListPrecondition(), node->getState())) {
 
-			Node* childNode = new Node(node, curentState, node->getCost() + temp->getCost(), temp);
 
-			if (checkPreconditionGoal(goal, curentState)) {
-			
-				// we found a solution!
-				leaves.push_back(childNode);
-				foundOne = true;
-			}
-			else {
-				// not at a solution yet, so test all the remaining actions and branch out the tree
+				std::unordered_map<std::string, bool> curentState = applyEffect(node->getState(), temp->getListEffect());
 
-				std::vector<Action*> newActionAvailble = removeAction(curentActionAvailble, temp);
-				bool found = buildTree(childNode, leaves, goal, newActionAvailble);
-				if (found)
+				Node* childNode = new Node(node, curentState, node->getCost() + temp->getCost(), temp);
+
+				if (checkPreconditionGoal(goal, curentState)) {
+
+
+					leaves.push_back(childNode);
 					foundOne = true;
+				}
+				else {
+
+
+					std::vector<Action*> newActionAvailble = removeAction(curentActionAvailble, temp);
+					bool found = buildTree(childNode, leaves, goal, newActionAvailble);
+					if (found)
+						foundOne = true;
+				}
+
 			}
+
 
 		}
-
-
+	}
+	else {
+		foundOne = true;
 	}
 
 	return foundOne;
 
 }
-
-
-//
-//void GoapPlanner::aStar(Node* start) {
-//
-//	std::vector<Node*> openNode;
-//	openNode.push_back(start);
-//
-//	std::vector<std::string> preconditions;
-//
-//	for (Node* precondition : start->getChilds()) {
-//
-//		auto search = world.WorldPreconditions.find(precondition->getName());
-//		if (search != world.WorldPreconditions.end()) {
-//			if (!search->second) {
-//				preconditions.push_back(precondition->getName());
-//			}
-//
-//		}
-//
-//	}
-//
-//
-//	while (openNode.size() > 0)
-//	{
-//		for (Node* node : openNode) {
-//			openNode.erase(std::find(openNode.begin(), openNode.end(), node));
-//			int min = 999999;
-//			Node* minCostNode = nullptr;
-//			for (Node* temp : node->getChilds())
-//			{
-//				if (temp->getCost() < min) {
-//					min = temp->getCost();
-//					minCostNode = temp;
-//				}
-//			}
-//
-//			bool ok = true;
-//			std::vector<std::string> tempPreconditions = preconditions;
-//
-//			for (Node* precondition : minCostNode->getChilds()) {
-//
-//
-//				auto search = world.WorldPreconditions.find(precondition->getName());
-//				if (search != world.WorldPreconditions.end()) {
-//					if (!search->second) {
-//						ok = false;
-//						tempPreconditions.push_back(search->first);
-//					}
-//
-//				}
-//
-//			}
-//
-//			if (ok) {
-//				for (Node* validatePrecondition : minCostNode->getChilds()) {
-//
-//				}
-//			}
-//			else {
-//				
-//
-//
-//				bool good = true;
-//				for (Node* other : node->getChilds()) {
-//					int nbPrecondition = 0;
-//					if (other->getName() != minCostNode->getName()) {
-//						for (Node* precondition : node->getChilds()) {
-//
-//
-//							auto search = world.WorldPreconditions.find(precondition->getName());
-//							if (search != world.WorldPreconditions.end()) {
-//								if (!search->second) {
-//									nbPrecondition++;
-//								}
-//
-//							}
-//
-//						}
-//
-//						if ((preconditions.size() + nbPrecondition) < tempPreconditions.size()) {
-//							good = false;
-//							break;
-//						}
-//					}
-//				
-//				}
-//
-//				if (good) {
-//					openNode.push_back(minCostNode);
-//					preconditions = tempPreconditions;
-//				}
-//				else {
-//
-//				}
-//
-//			}
-//		}
-//	}
-//
-//
-//}
-//
-//void GoapPlanner::buildGraph(Node* parent) {
-//
-//	if (parent->getIsAction()) {
-//
-//		int index = 0;
-//		Action* parentAction = nullptr;
-//		while (index < AllActions.size()) {
-//
-//			if (parent->getName() == AllActions.at(index)->getMyAction()) {
-//				parentAction = AllActions.at(index);
-//				index = AllActions.size();
-//			}
-//			index++;
-//		}
-//
-//		if (parentAction == nullptr || parentAction->getListPrecondition().size() == 0) {
-//			return;
-//		}
-//
-//		for (const std::string temp : parentAction->getListPrecondition())
-//		{
-//			Node* precondition = new Node(false, temp);
-//			buildGraph(precondition);
-//			parent->addNode(precondition);
-//		}
-//
-//	}
-//	else {
-//
-//		for (const Action* temp : AllActions) {
-//			for (const std::string tempy : temp->getListEffect()) {
-//				if (parent->getName() == tempy) {
-//
-//					Node* action = new Node(true, temp->getMyAction());
-//					buildGraph(action);
-//					parent->addNode(action);
-//					break;
-//				}
-//			}
-//
-//		}
-//
-//	}
-//
-//}
