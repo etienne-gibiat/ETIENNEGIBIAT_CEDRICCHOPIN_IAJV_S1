@@ -37,12 +37,12 @@ void ActionHabitant::Action_CreationHabitant(const float moyEval, World& world)
 		if (randEspion < 0.1f) {
 			world.lstHabitant.push_back(new Espion(world, 0.8));
 			iterRessource->second.second += world.coutCreationHabitant / 3; //Capacité maximale augmentée
-			std::cout << " [[ Creation d'un espion, reduction de la nourriture ]] (" << world.nourritureDisponible << ")" << std::endl;
+			std::cout << " [[ Creation d'un espion, reduction de la nourriture ]] (" << iterRessource->second.first << ")" << std::endl;
 		}
 		else {
 			world.lstHabitant.push_back(new Habitant(world, 0.6));
 			iterRessource->second.second += world.coutCreationHabitant / 3; //Capacité maximale augmentée
-			std::cout << " [[ Creation d'un habitant, reduction de la nourriture ]] (" << world.nourritureDisponible << ")" << std::endl;
+			std::cout << " [[ Creation d'un habitant, reduction de la nourriture ]] (" << iterRessource->second.first << ")" << std::endl;
 		}
 		iterRessource->second.first -= world.coutCreationHabitant; // Creation d'un habitant - reduction des resources
 
@@ -51,6 +51,3 @@ void ActionHabitant::Action_CreationHabitant(const float moyEval, World& world)
 	}
 }
 
-void ActionHabitant::Action_TuerHabitant()
-{
-}
