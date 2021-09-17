@@ -202,7 +202,7 @@ std::vector<Action*> GoapPlanner::initPlan(Action* goal) {
 
 }
 
-bool GoapPlanner::checkPrecondition(const std::vector<std::string> actionPrecondition,const std::unordered_map<std::string, bool> parentState) const{
+bool GoapPlanner::checkPrecondition(const std::vector<std::string>& actionPrecondition, const std::unordered_map<std::string, bool>& parentState) const{
 
 	bool ok = true;
 
@@ -222,7 +222,7 @@ bool GoapPlanner::checkPrecondition(const std::vector<std::string> actionPrecond
 
 }
 
-std::unordered_map<std::string, bool> GoapPlanner::applyEffect(const std::unordered_map<std::string, bool> parentState, const std::vector<std::string> actionEffects)const {
+std::unordered_map<std::string, bool> GoapPlanner::applyEffect(const std::unordered_map<std::string, bool>& parentState, const std::vector<std::string>& actionEffects)const {
 	
 	std::unordered_map<std::string, bool> newState = parentState;
 		
@@ -243,7 +243,7 @@ std::unordered_map<std::string, bool> GoapPlanner::applyEffect(const std::unorde
 	
 }
 
-std::vector<Action*> GoapPlanner::removeAction(const std::vector<Action*> curentActionAvailble, const Action* action)const {
+std::vector<Action*> GoapPlanner::removeAction(const std::vector<Action*>& curentActionAvailble, Action* action)const {
 
 	std::vector<Action*> newActionAvailble;
 
@@ -260,7 +260,7 @@ std::vector<Action*> GoapPlanner::removeAction(const std::vector<Action*> curent
 	return newActionAvailble;
 }
 
-bool GoapPlanner::checkPreconditionGoal(const Action* goal, const std::unordered_map<std::string, bool> curentState)const {
+bool GoapPlanner::checkPreconditionGoal( Action* goal, std::unordered_map<std::string, bool>& const curentState)const {
 
 	bool ok = true;
 
@@ -281,7 +281,7 @@ bool GoapPlanner::checkPreconditionGoal(const Action* goal, const std::unordered
 }
 
 
-bool GoapPlanner::buildTree(Node* node, std::vector<Node*>& leaves, Action* goal, const std::vector<Action*> curentActionAvailble) {
+bool GoapPlanner::buildTree(Node* node, std::vector<Node*>& leaves, Action* goal, const std::vector<Action*>& curentActionAvailble) {
 
 	bool foundOne = false;
 
@@ -298,6 +298,7 @@ bool GoapPlanner::buildTree(Node* node, std::vector<Node*>& leaves, Action* goal
 
 				Node* childNode = new Node(node, curentState, node->getCost() + temp->getCost(), temp);
 
+				
 				//Check si après l'action, le goal est possible a réaliser
 				if (checkPreconditionGoal(goal, curentState)) {
 

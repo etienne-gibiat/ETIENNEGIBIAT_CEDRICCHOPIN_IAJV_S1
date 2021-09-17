@@ -6,9 +6,9 @@
 class Action
 {
 public:
-	Action(const std::string nameAction, World& world, int actionCost): myAction(nameAction), parWorld(world), cost(actionCost) {};
-	void AddEffect(const std::string effect);
-	void AddPrecondition(const std::string effect, const bool isActiv);
+	Action(const std::string& nameAction, World& world, int actionCost): myAction(nameAction), parWorld(world), cost(actionCost) {};
+	void AddEffect(const std::string& effect);
+	void AddPrecondition(const std::string& precondition, const bool isActiv);
 
 	std::vector<std::string> getListEffect() const;
 	std::string getMyAction() const;

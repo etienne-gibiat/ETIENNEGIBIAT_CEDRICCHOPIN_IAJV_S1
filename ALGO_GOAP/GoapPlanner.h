@@ -38,7 +38,7 @@ public:
 	/// <param name="goal"></param>
 	/// <param name="curentActionAvailble"></param>
 	/// <returns></returns>
-	bool buildTree(Node* node, std::vector<Node*>& leaves, Action* goal,const std::vector<Action*> curentActionAvailble);
+	bool buildTree(Node* node, std::vector<Node*>& leaves, Action* goal,const std::vector<Action*>& curentActionAvailble);
 	
 	/// <summary>
 	/// Verification de si les préconditions de l'action en paramètre sont déjà validées
@@ -46,7 +46,7 @@ public:
 	/// <param name="actionPrecondition"></param>
 	/// <param name="parentState"></param>
 	/// <returns></returns>
-	bool checkPrecondition(const std::vector<std::string> actionPrecondition,const std::unordered_map<std::string, bool> parentState) const;
+	bool checkPrecondition(const std::vector<std::string>& actionPrecondition,const std::unordered_map<std::string, bool>& parentState) const;
 	
 	/// <summary>
 	/// Applique les effets de l'action
@@ -54,7 +54,7 @@ public:
 	/// <param name="parentState"></param>
 	/// <param name="actionEffects"></param>
 	/// <returns></returns>
-	std::unordered_map<std::string, bool> applyEffect(const std::unordered_map<std::string, bool> parentState,const std::vector<std::string> actionEffects) const;
+	std::unordered_map<std::string, bool> applyEffect(const std::unordered_map<std::string, bool>& parentState,const std::vector<std::string>& actionEffects) const;
 	
 	/// <summary>
 	/// Enleve une action de la liste des actions disponibles
@@ -62,7 +62,7 @@ public:
 	/// <param name="curentActionAvailble"></param>
 	/// <param name="action"></param>
 	/// <returns></returns>
-	std::vector<Action*> removeAction(const std::vector<Action*> curentActionAvailble, const Action* action) const;
+	std::vector<Action*> removeAction(const std::vector<Action*>& curentActionAvailble, Action* action) const;
 	
 	/// <summary>
 	/// Renvois faux si une des préconditions du but n'est pas respectée
@@ -70,7 +70,7 @@ public:
 	/// <param name="goal"></param>
 	/// <param name="curentState"></param>
 	/// <returns></returns>
-	bool checkPreconditionGoal(const Action* goal, std::unordered_map<std::string, bool> const curentState) const;
+	bool checkPreconditionGoal( Action* goal, std::unordered_map<std::string, bool>& const curentState) const;
 	
 	/// <summary>
 	/// Renvois un booléan aléatoire
