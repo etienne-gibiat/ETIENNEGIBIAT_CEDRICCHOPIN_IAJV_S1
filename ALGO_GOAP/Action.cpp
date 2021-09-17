@@ -3,7 +3,7 @@
 #include <cassert>
 #include <iostream>
 
-void Action::AddEffect(const std::string effect) {
+void Action::AddEffect(const std::string& effect) {
 	std::cout << "Add effect '" << effect << "' pour action : '" << myAction << "' " << std::endl;
 	const auto effectIt = std::find(listEffect.begin(), listEffect.end(), effect);
 	assert(effectIt == listEffect.end());
@@ -14,7 +14,7 @@ void Action::AddEffect(const std::string effect) {
 }
 
 
-void Action::AddPrecondition(const std::string precondition,const bool isActiv) {
+void Action::AddPrecondition(const std::string& precondition, const bool isActiv) {
 	std::cout << "Add precondition '" << precondition << "' pour action : '" << myAction << "' " << std::endl;
 	
 
@@ -33,15 +33,15 @@ void Action::AddPrecondition(const std::string precondition,const bool isActiv) 
 	parWorld.WorldPreconditions.insert(std::make_pair(precondition, isActiv));
 }
 
-std::vector<std::string> Action::getListEffect() const {
+std::vector<std::string> Action::getListEffect() const{
 	return listEffect;
 }
 
-std::string Action::getMyAction() const {
+std::string Action::getMyAction() const{
 	return myAction;
 }
 
-std::vector<std::string> Action::getListPrecondition() const {
+std::vector<std::string> Action::getListPrecondition() const{
 	return listPrecondition;
 }
 
