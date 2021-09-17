@@ -140,14 +140,20 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Action.cpp" />
+    <ClCompile Include="ActionHabitant.cpp" />
     <ClCompile Include="ALGO_GOAP.cpp" />
     <ClCompile Include="Espion.cpp" />
+    <ClCompile Include="Evaluate.cpp" />
     <ClCompile Include="Habitant.cpp" />
     <ClCompile Include="Node.cpp" />
     <ClCompile Include="GoapPlanner.cpp" />
     <ClCompile Include="UtilityAI.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Action.h" />
+    <ClInclude Include="ActionHabitant.h" />
+    <ClInclude Include="Espion.h" />
+    <ClInclude Include="Evaluate.h" />
     <ClInclude Include="Node.h" />
     <ClInclude Include="Habitant.h" />
     <ClInclude Include="UtilityAI.h" />

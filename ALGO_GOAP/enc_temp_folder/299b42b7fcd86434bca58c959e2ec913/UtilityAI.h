@@ -28,12 +28,7 @@ public:
 	/// <summary>
 	/// Lance la simulation de l'algorithme
 	/// </summary>
-	void Tick(unsigned int const nbTurn);
-
-	/// <summary>
-	/// Desalloue les pointeurs
-	/// </summary>
-	void DeInit();
+	void Tick();
 private:
 	World& world;
 

@@ -2,22 +2,20 @@
 
 
 
+
 void Habitant::DoSomething()
 {
-
+	ActionHabitant action;
 	unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
 	std::minstd_rand0 generator(seed);
 	float random = generator() / static_cast<float>(generator.max());
 
 	if (random > capacity) {
-		std::cout << "Habitant " << id << " recolte de la nourriture" << std::endl;
-		world.nourritureDisponible += 2;
-		world.nourritureDisponible = std::min(world.nourritureDisponible, world.nourritureMaximale);
-		timeIdle = 0;
+		action.Action_RecolteRessource(Ressource::Food, 2, world,this);
 	}
 	else {
-		std::cout << "Habitant " << id << " patrouille.." << std::endl;
-		timeIdle += 0.5;
+		action.Action_Patrouille(this);
+		
 	}
 }
 
@@ -26,7 +24,16 @@ float Habitant::GetTimeIdle() const
 	return timeIdle;
 }
 
-int Habitant::getId() const
+void Habitant::AddTimeIdle(const float time) {
+
+	timeIdle += time;
+}
+
+void Habitant::SetTimeIdle(const float time) {
+	timeIdle = time;
+}
+
+unsigned int Habitant::getId() const
 {
 	return id;
 }

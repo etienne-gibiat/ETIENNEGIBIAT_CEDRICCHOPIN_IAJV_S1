@@ -3,6 +3,8 @@
 #include <numeric>
 #include "Habitant.h"
 #include "Espion.h"
+#include <chrono>
+#include <random>
 #include "Evaluate.h"
 
 
@@ -24,13 +26,13 @@ float UtilityAI::EvaluationTimeIdle(const float time) const
 	float eval = std::max(exp2f(-0.1 * time), static_cast <float>(0.0));
 	return eval;
 }
-void UtilityAI::Tick(unsigned int const nbTurn)
+void UtilityAI::Tick()
 {
 	Evaluate eval;
 	ActionHabitant action;
-	Habitant* villageois = new Habitant(world, 0.3); //Le village commence avec un habitant seul et malheureux
+	Habitant* villageois = new Habitant(world,0.3); //Le village commence avec un habitant seul et malheureux
 	world.lstHabitant.push_back(villageois);
-	int i = nbTurn; //Nombre d'itérations du monde
+	int i = 500; //Nombre d'itérations du monde
 	float evalTimeIdle;
 	float totalTimeIdle;
 	std::vector<float> listEval;
@@ -39,18 +41,15 @@ void UtilityAI::Tick(unsigned int const nbTurn)
 		listEval.clear();
 		std::cout << "############################" << std::endl;
 		for (Habitant* habit : world.lstHabitant) {
-			habit->DoSomething();
+			habit->DoSomething(); 
 			totalTimeIdle += habit->GetTimeIdle(); // On recupere la durée total d'idle de tout les habitants
-
+			
 		}
-		float moyEval = eval.Eval_MoyCreationHabitant(totalTimeIdle, Ressource::Food, world); // Calcul de la moyenne des evaluations
+		float moyEval = eval.Eval_MoyCreationHabitant(totalTimeIdle,Ressource::Food,world); // Calcul de la moyenne des evaluations
 		action.Action_CreationHabitant(moyEval, world);
 		std::cout << "############################" << std::endl;
 	}
-}
 
-void UtilityAI::DeInit()
-{
 	//Libere les habitants de l'emprise de l'algorithme
 	for (Habitant* habit : world.lstHabitant) {
 		if (habit != nullptr) {

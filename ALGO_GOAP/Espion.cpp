@@ -26,7 +26,7 @@ void Espion::AttackPlayer()
 	world.nbHabitant--;
 	auto habitantToErase = world.lstHabitant.begin() + random;
 	Habitant* h = *habitantToErase;
-	std::cout << "L'espion " << id << " a tuer l'habitant " << h->getId() << std::endl;
+	std::cout << "\033[1;31m " << "L'espion " << id << " a tuer l'habitant " << h->getId() << "\033[0m\n" << std::endl;
 	world.lstHabitant.erase(world.lstHabitant.begin() + random);
 	
 }

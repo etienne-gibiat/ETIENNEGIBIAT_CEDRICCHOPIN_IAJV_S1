@@ -1,5 +1,7 @@
 #pragma once
 #include "World.h"
+#include "ActionHabitant.h"
+#include "Evaluate.h"
 #include <iostream>
 #include <chrono>
 #include <random>
@@ -23,14 +25,26 @@ public:
 	/// </summary>
 	/// <returns></returns>
 	virtual float GetTimeIdle() const;
+
+	/// <summary>
+	/// Definis le temps idle
+	/// </summary>
+	/// <param name="time"></param>
+	virtual void SetTimeIdle(const float time);
 	
 	/// <summary>
 	/// Recupere l'id du personnage
 	/// </summary>
 	/// <returns></returns>
-	virtual int getId() const;
+	virtual unsigned int getId() const;
+
+	/// <summary>
+	/// Ajoute du temps d'idle
+	/// </summary>
+	/// <param name="time"></param>
+	virtual void AddTimeIdle(const float time);
 protected:
-	int id;
+	unsigned int id;
 	float timeIdle;
 	float capacity;
 	World& world;

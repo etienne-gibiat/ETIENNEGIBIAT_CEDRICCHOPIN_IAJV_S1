@@ -9,10 +9,10 @@ class Node
 public:
     Node(Node* parent, std::unordered_map<std::string, bool> state, int cost, Action* action);
 
-    std::unordered_map<std::string, bool> getState() const;
-    Action* getAction() const;
-    int getCost() const;
-    Node* getParrent() const;
+    std::unordered_map<std::string, bool> getState();
+    Action* getAction();
+    int getCost();
+    Node* getParrent();
 
 private:
 

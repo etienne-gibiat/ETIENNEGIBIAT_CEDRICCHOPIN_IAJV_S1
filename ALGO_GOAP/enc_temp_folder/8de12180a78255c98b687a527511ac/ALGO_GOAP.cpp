@@ -28,8 +28,7 @@ int main()
 	world.nbHabitant = 1;
 	world.nbHabitantDesired = 10;
 
-	uAI.Tick(50);
-	uAI.DeInit();
+	uAI.Tick();
 
 	return 0;
 	

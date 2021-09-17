@@ -262,21 +262,18 @@ std::vector<Action*> GoapPlanner::removeAction(const std::vector<Action*> curent
 
 bool GoapPlanner::checkPreconditionGoal(const Action* goal, const std::unordered_map<std::string, bool> curentState)const {
 
-	bool ok = true;
-
-	for (std::string temp : goal->getListPrecondition()) {
-		auto search = curentState.find(temp);
+	for (const std::string& temp : goal->getListPrecondition()) {
+		const auto& search = curentState.find(temp);
 		if (search != curentState.end()) {
 
 			if (!search->second) {
-				ok = false;
-				break;
+				return false;
 			}
 
 		}
 	}
 
-	return ok;
+	return true;
 
 }
 
