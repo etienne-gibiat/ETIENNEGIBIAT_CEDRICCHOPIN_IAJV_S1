@@ -20,6 +20,7 @@ struct World
 	std::unordered_map<Ressource, std::pair<unsigned int, unsigned int>> Stock; // Stock de ressource du village (Ressource - actuel / maximum)
 
 	unsigned int coutCreationHabitant; // Cout en nourriture pour la création d'un habitant
+	unsigned int coutCreationTabouret; // Cout en nourriture pour la création d'un tabouret
 	unsigned int nbHabitant; // Nombre actuel d'habitant
 	unsigned int nbHabitantDesired; // Nombre d'habitants désirés	
 

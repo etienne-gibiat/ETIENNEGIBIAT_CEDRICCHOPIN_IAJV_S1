@@ -13,4 +13,6 @@ public:
 
 	void Action_CreationHabitant(const float moyEval, World& world);
 
+	void Action_CreationTabouret(World& world, Habitant* habitant);
+
 };

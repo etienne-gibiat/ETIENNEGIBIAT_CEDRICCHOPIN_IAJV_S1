@@ -4,7 +4,9 @@ float Evaluate::Eval_Ressources(Ressource ressource, World& world) const
 {
     const auto iter = world.Stock.find(ressource);
     if (iter != world.Stock.end()) {
-        return  std::max((static_cast<float>(iter->second.second) - iter->second.first) / iter->second.second, 0.0f);
+        float eval = std::max((static_cast<float>(iter->second.second) - iter->second.first) / iter->second.second, 0.0f);
+        
+        return  eval;
     }
     return 0.0f;
 }

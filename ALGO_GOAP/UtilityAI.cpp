@@ -21,17 +21,17 @@ float UtilityAI::EvaluationCreationHabitantNombre() const
 float UtilityAI::EvaluationTimeIdle(const float time) const
 {
 
-	float eval = std::max(exp2f(-0.1 * time), static_cast <float>(0.0));
+	float eval = std::max(exp2f(-0.1f * time),0.0f);
 	return eval;
 }
 void UtilityAI::Tick(unsigned int const nbTurn)
 {
 	Evaluate eval;
 	ActionHabitant action;
-	Habitant* villageois = new Habitant(world, 0.3); //Le village commence avec un habitant seul et malheureux
+	Habitant* villageois = new Habitant(world, 0.3f); //Le village commence avec un habitant seul et malheureux
 	world.lstHabitant.push_back(villageois);
 	int i = nbTurn; //Nombre d'itérations du monde
-	float evalTimeIdle;
+
 	float totalTimeIdle;
 	std::vector<float> listEval;
 	while (i-- > 0) {
@@ -45,6 +45,9 @@ void UtilityAI::Tick(unsigned int const nbTurn)
 		}
 		float moyEval = eval.Eval_MoyCreationHabitant(totalTimeIdle, Ressource::Food, world); // Calcul de la moyenne des evaluations
 		action.Action_CreationHabitant(moyEval, world);
+
+		std::cout << "Stock actuel nourriture : " << world.Stock.at(Ressource::Food).first << " / " << world.Stock.at(Ressource::Food).second << std::endl;
+		std::cout << "Stock actuel Bois : " << world.Stock.at(Ressource::Wood).first << " / " << world.Stock.at(Ressource::Wood).second << std::endl;
 		std::cout << "############################" << std::endl;
 	}
 }

@@ -13,7 +13,7 @@ public:
 	static unsigned int idHabitant;
 
 
-	Habitant(World& parWorld, const float capacityCollect) : world(parWorld), timeIdle(0), capacity(capacityCollect) { idHabitant++; id = idHabitant; }
+	Habitant(World& parWorld, const float capacityCollect) : world(parWorld), timeIdle(0), capacity(capacityCollect), nbTabouret(false) { idHabitant++; id = idHabitant; }
 
 	/// <summary>
 	/// Permet à l'habitant de faire une action
@@ -43,10 +43,13 @@ public:
 	/// </summary>
 	/// <param name="time"></param>
 	virtual void AddTimeIdle(const float time);
+
+	unsigned int nbTabouret;
 protected:
 	unsigned int id;
 	float timeIdle;
 	float capacity;
 	World& world;
+	
 
 };
